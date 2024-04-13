@@ -71,18 +71,21 @@ class Apple(GameObject):
         Метод производного класса для установки объекта
         в случайном месте игровой поверхности
         """
-        while self.position in occupied_position:
-            self.position = (
-                randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-                randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-            )
-
-            if self.position not in occupied_position:
+        if occupied_position is None:
+            occupied_position = []
+        else:
+            while self.position in occupied_position:
                 self.position = (
                     randint(0, GRID_WIDTH - 1) * GRID_SIZE,
                     randint(0, GRID_HEIGHT - 1) * GRID_SIZE
                 )
-                break
+
+                if self.position not in occupied_position:
+                    self.position = (
+                        randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+                        randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+                    )
+                    break
 
     def draw(self):
         """Метод отрисовки объекта производного класса (яблоко)"""
@@ -160,7 +163,7 @@ def handle_keys(game_object):
 def main():
     """Главный метод игры"""
     snake = Snake()
-    apple = Apple(occupied_position=snake.positions)
+    apple = Apple(snake.positions)
 
     while True:
         """Бесконечный цикл игрового процесса (логика игры)"""
