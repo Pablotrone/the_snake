@@ -63,6 +63,8 @@ class Apple(GameObject):
 
     def __init__(self, occupied_position=None):
         """Инициализация атрибутов производного класса"""
+        if occupied_position is None:
+            occupied_position = []
         super().__init__(body_color=APPLE_COLOR)
         self.randomize_position(occupied_position)
 
@@ -71,21 +73,13 @@ class Apple(GameObject):
         Метод производного класса для установки объекта
         в случайном месте игровой поверхности
         """
-        if occupied_position is None:
-            occupied_position = []
-        else:
-            while self.position in occupied_position:
-                self.position = (
-                    randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-                    randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-                )
-
-                if self.position not in occupied_position:
-                    self.position = (
-                        randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-                        randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-                    )
-                    break
+        while True:
+            self.position = (
+                randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+                randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+            )
+            if self.position not in occupied_position:
+                break
 
     def draw(self):
         """Метод отрисовки объекта производного класса (яблоко)"""
@@ -178,6 +172,7 @@ def main():
             apple.randomize_position(occupied_position=snake.positions)
         elif snake.get_head_position() in snake.positions[1:]:
             snake.reset()
+            apple.randomize_position(occupied_position=snake.positions)
 
         snake.draw()
         apple.draw()
